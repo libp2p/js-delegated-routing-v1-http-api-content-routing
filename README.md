@@ -37,7 +37,7 @@ import { createLibp2p } from 'libp2p'
 import { reframeContentRouting } from '@libp2p/reframe-content-routing'
 
 const node = await createLibp2p({
-  contentRouting: [
+  contentRouters: [
     reframeContentRouting('https://cid.contact/reframe')
   ]
   //.. other config

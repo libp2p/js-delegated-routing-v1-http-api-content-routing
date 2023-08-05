@@ -1,19 +1,15 @@
 {
-  "name": "@libp2p/reframe-content-routing",
-  "version": "1.0.2",
-  "description": "Use a Reframe service to discover content providers",
+  "name": "@libp2p/http-v1-content-routing",
+  "version": "0.0.0",
+  "description": "Use a Routing V1 HTTP service to discover content providers",
   "license": "Apache-2.0 OR MIT",
-  "homepage": "https://github.com/libp2p/js-reframe-content-routing#readme",
+  "homepage": "https://github.com/libp2p/js-http-v1-content-routing#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/libp2p/js-reframe-content-routing.git"
+    "url": "git+https://github.com/libp2p/js-http-v1-content-routing.git"
   },
   "bugs": {
-    "url": "https://github.com/libp2p/js-reframe-content-routing/issues"
-  },
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=7.0.0"
+    "url": "https://github.com/libp2p/js-http-v1-content-routing/issues"
   },
   "type": "module",
   "types": "./dist/src/index.d.ts",
@@ -136,22 +132,20 @@
     "docs": "aegir docs"
   },
   "dependencies": {
-    "@libp2p/interface-content-routing": "^2.0.2",
-    "@libp2p/interface-peer-info": "^1.0.9",
-    "@libp2p/interfaces": "^3.3.1",
-    "@libp2p/logger": "^2.0.7",
-    "@libp2p/peer-id": "^2.0.3",
+    "@libp2p/interface": "^0.1.1",
+    "@libp2p/logger": "^3.0.1",
+    "@libp2p/peer-id": "^3.0.1",
     "@multiformats/multiaddr": "^12.1.2",
     "any-signal": "^4.1.1",
     "browser-readablestream-to-it": "^2.0.2",
     "it-to-buffer": "^4.0.1",
-    "multiformats": "^11.0.2",
+    "multiformats": "^12.0.1",
     "p-defer": "^4.0.0",
     "p-queue": "^7.3.4",
     "uint8arrays": "^4.0.3"
   },
   "devDependencies": {
-    "@libp2p/peer-id-factory": "^2.0.3",
+    "@libp2p/peer-id-factory": "^3.0.2",
     "aegir": "^40.0.8",
     "body-parser": "^1.20.2",
     "it-all": "^3.0.1"

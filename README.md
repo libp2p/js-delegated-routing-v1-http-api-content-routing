@@ -1,11 +1,11 @@
-# @libp2p/reframe-content-routing <!-- omit in toc -->
+# @libp2p/http-v1-content-routing <!-- omit in toc -->
 
 [![libp2p.io](https://img.shields.io/badge/project-libp2p-yellow.svg?style=flat-square)](http://libp2p.io/)
 [![Discuss](https://img.shields.io/discourse/https/discuss.libp2p.io/posts.svg?style=flat-square)](https://discuss.libp2p.io)
-[![codecov](https://img.shields.io/codecov/c/github/libp2p/js-reframe-content-routing.svg?style=flat-square)](https://codecov.io/gh/libp2p/js-reframe-content-routing)
-[![CI](https://img.shields.io/github/actions/workflow/status/libp2p/js-reframe-content-routing/js-test-and-release.yml?branch=main\&style=flat-square)](https://github.com/libp2p/js-reframe-content-routing/actions/workflows/js-test-and-release.yml?query=branch%3Amain)
+[![codecov](https://img.shields.io/codecov/c/github/libp2p/js-http-v1-content-routing.svg?style=flat-square)](https://codecov.io/gh/libp2p/js-http-v1-content-routing)
+[![CI](https://img.shields.io/github/actions/workflow/status/libp2p/js-http-v1-content-routing/js-test-and-release.yml?branch=main\&style=flat-square)](https://github.com/libp2p/js-http-v1-content-routing/actions/workflows/js-test-and-release.yml?query=branch%3Amain)
 
-> Use a Reframe service to discover content providers
+> Use a Routing V1 HTTP service to discover content providers
 
 ## Table of contents <!-- omit in toc -->
 
@@ -19,15 +19,15 @@
 ## Install
 
 ```console
-$ npm i @libp2p/reframe-content-routing
+$ npm i @libp2p/http-v1-content-routing
 ```
 
 ### Browser `<script>` tag
 
-Loading this module through a script tag will make it's exports available as `Libp2pReframeContentRouting` in the global namespace.
+Loading this module through a script tag will make it's exports available as `Libp2pHttpV1ContentRouting` in the global namespace.
 
 ```html
-<script src="https://unpkg.com/@libp2p/reframe-content-routing/dist/index.min.js"></script>
+<script src="https://unpkg.com/@libp2p/http-v1-content-routing/dist/index.min.js"></script>
 ```
 
 ## Example
@@ -51,7 +51,7 @@ for await (const provider of node.contentRouting.findProviders('cid')) {
 
 ## API Docs
 
-- <https://libp2p.github.io/js-reframe-content-routing>
+- <https://libp2p.github.io/js-http-v1-content-routing>
 
 ## License
 

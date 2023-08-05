@@ -1,3 +1,17 @@
+## [1.0.2](https://github.com/libp2p/js-reframe-content-routing/compare/v1.0.1...v1.0.2) (2023-08-05)
+
+
+### Trivial Changes
+
+* Update .github/workflows/stale.yml [skip ci] ([77f9ffc](https://github.com/libp2p/js-reframe-content-routing/commit/77f9ffce2cb7ea56c0861b4de9c7284d4b1b36ff))
+* Update .github/workflows/stale.yml [skip ci] ([f95d5ca](https://github.com/libp2p/js-reframe-content-routing/commit/f95d5ca6be48da5d2d175277298638de12ca3558))
+* Update .github/workflows/stale.yml [skip ci] ([58a4feb](https://github.com/libp2p/js-reframe-content-routing/commit/58a4febb7c6856601e7c1200b4c7006b4c5903ad))
+
+
+### Dependencies
+
+* **dev:** bump aegir from 39.0.13 to 40.0.8 ([#16](https://github.com/libp2p/js-reframe-content-routing/issues/16)) ([088828f](https://github.com/libp2p/js-reframe-content-routing/commit/088828f3d87969c168089bbc6787517805959dbc))
+
 ## [1.0.1](https://github.com/libp2p/js-reframe-content-routing/compare/v1.0.0...v1.0.1) (2023-05-19)
 
 

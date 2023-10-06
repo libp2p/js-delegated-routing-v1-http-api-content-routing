@@ -1,3 +1,17 @@
+## [1.0.2](https://github.com/libp2p/js-http-v1-content-routing/compare/v1.0.1...v1.0.2) (2023-10-06)
+
+
+### Trivial Changes
+
+* add or force update .github/workflows/js-test-and-release.yml ([#22](https://github.com/libp2p/js-http-v1-content-routing/issues/22)) ([cb9facf](https://github.com/libp2p/js-http-v1-content-routing/commit/cb9facf55e37563f9c0d2cd31d5aa0bd0516cfaf))
+* delete templates [skip ci] ([#21](https://github.com/libp2p/js-http-v1-content-routing/issues/21)) ([7892673](https://github.com/libp2p/js-http-v1-content-routing/commit/7892673a1bf9d10eaeb318127ba02cdb629a8f98))
+* Update .github/workflows/stale.yml [skip ci] ([cb1186f](https://github.com/libp2p/js-http-v1-content-routing/commit/cb1186f1359157bf2f6d0779f5a5eb089a4f37ca))
+
+
+### Dependencies
+
+* **dev:** bump aegir from 40.0.13 to 41.0.0 ([#26](https://github.com/libp2p/js-http-v1-content-routing/issues/26)) ([951bd07](https://github.com/libp2p/js-http-v1-content-routing/commit/951bd07065fd10dba1c751d4e172a9b986d11f59))
+
 ## [1.0.1](https://github.com/libp2p/js-http-v1-content-routing/compare/v1.0.0...v1.0.1) (2023-08-05)
 
 

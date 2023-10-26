@@ -1,34 +1,31 @@
+import { type DelegatedRoutingV1HttpApiClient, createDelegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
 import { CodeError } from '@libp2p/interface/errors'
 import { logger } from '@libp2p/logger'
-import { peerIdFromString } from '@libp2p/peer-id'
-import { multiaddr } from '@multiformats/multiaddr'
-import { anySignal } from 'any-signal'
-import toIt from 'browser-readablestream-to-it'
-import toBuffer from 'it-to-buffer'
-import defer from 'p-defer'
-import PQueue from 'p-queue'
-import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
+import { peerIdFromBytes } from '@libp2p/peer-id'
+import { marshal, unmarshal } from 'ipns'
+import map from 'it-map'
+import { equals as uint8ArrayEquals } from 'uint8arrays/equals'
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string'
 import type { AbortOptions } from '@libp2p/interface'
 import type { ContentRouting } from '@libp2p/interface/content-routing'
+import type { PeerId } from '@libp2p/interface/peer-id'
 import type { PeerInfo } from '@libp2p/interface/peer-info'
 import type { Startable } from '@libp2p/interface/startable'
-import type { Multiaddr } from '@multiformats/multiaddr'
 import type { CID } from 'multiformats/cid'
 
-const log = logger('reframe-content-routing')
+const log = logger('delegated-routing-v1-http-api-content-routing')
 
-export interface ReframeV1Response {
-  Providers: ReframeV1ResponseItem[]
+const IPNS_PREFIX = uint8ArrayFromString('/ipns/')
+
+function isIPNSKey (key: Uint8Array): boolean {
+  return uint8ArrayEquals(key.subarray(0, IPNS_PREFIX.byteLength), IPNS_PREFIX)
 }
 
-export interface ReframeV1ResponseItem {
-  ID: string
-  Addrs: string[]
-  Protocol: string
-  Schema: string
+const peerIdFromRoutingKey = (key: Uint8Array): PeerId => {
+  return peerIdFromBytes(key.slice(IPNS_PREFIX.length))
 }
 
-export interface ReframeContentRoutingInit {
+export interface DelegatedRoutingV1HTTPAPIContentRoutingInit {
   /**
    * A concurrency limit to avoid request flood in web browser (default: 4)
    *
@@ -42,33 +39,21 @@ export interface ReframeContentRoutingInit {
   timeout?: number
 }
 
-const defaultValues = {
-  concurrentRequests: 4,
-  timeout: 30e3
-}
-
 /**
  * An implementation of content routing, using a delegated peer
  */
-class ReframeContentRouting implements ContentRouting, Startable {
+class DelegatedRoutingV1HTTPAPIContentRouting implements ContentRouting, Startable {
   private started: boolean
-  private readonly httpQueue: PQueue
-  private readonly shutDownController: AbortController
-  private readonly clientUrl: URL
-  private readonly timeout: number
+  private readonly client: DelegatedRoutingV1HttpApiClient
 
   /**
    * Create a new DelegatedContentRouting instance
    */
-  constructor (url: string | URL, init: ReframeContentRoutingInit = {}) {
+  constructor (url: string | URL, init: DelegatedRoutingV1HTTPAPIContentRoutingInit = {}) {
     this.started = false
-    this.shutDownController = new AbortController()
-    this.httpQueue = new PQueue({
-      concurrency: init.concurrentRequests ?? defaultValues.concurrentRequests
-    })
-    this.clientUrl = url instanceof URL ? url : new URL(url)
-    this.timeout = init.timeout ?? defaultValues.timeout
-    log('enabled Reframe routing via', url)
+    this.client = createDelegatedRoutingV1HttpApiClient(new URL(url), init)
+
+    log('enabled Delegated Routing V1 HTTP API Content Routing via', url)
   }
 
   isStarted (): boolean {
@@ -80,85 +65,47 @@ class ReframeContentRouting implements ContentRouting, Startable {
   }
 
   stop (): void {
-    this.httpQueue.clear()
-    this.shutDownController.abort()
+    this.client.stop()
     this.started = false
   }
 
-  async * findProviders (key: CID, options: AbortOptions = {}): AsyncIterable<PeerInfo> {
-    log('findProviders starts: %c', key)
-
-    const signal = anySignal([this.shutDownController.signal, options.signal, AbortSignal.timeout(this.timeout)])
-    const onStart = defer()
-    const onFinish = defer()
-
-    void this.httpQueue.add(async () => {
-      onStart.resolve()
-      return onFinish.promise
+  async * findProviders (cid: CID, options: AbortOptions = {}): AsyncIterable<PeerInfo> {
+    yield * map(this.client.getProviders(cid, options), (record) => {
+      return {
+        id: record.ID,
+        multiaddrs: record.Addrs ?? [],
+        protocols: []
+      }
     })
-
-    try {
-      await onStart.promise
-
-      // https://github.com/ipfs/specs/blob/main/routing/ROUTING_V1_HTTP.md#api
-      const resource = `${this.clientUrl}routing/v1/providers/${key.toString()}`
-      const getOptions = { headers: { Accept: 'application/x-ndjson' }, signal }
-      const a = await fetch(resource, getOptions)
-
-      if (a.body == null) {
-        throw new CodeError('Reframe response had no body', 'ERR_BAD_RESPONSE')
-      }
-
-      const body = await toBuffer(toIt(a.body))
-      const result: ReframeV1Response = JSON.parse(uint8ArrayToString(body))
-
-      for await (const event of result.Providers) {
-        if (event.Protocol !== 'transport-bitswap' || event.Schema !== 'bitswap') {
-          continue
-        }
-
-        yield this.mapEvent(event)
-      }
-    } catch (err) {
-      log.error('findProviders errored:', err)
-    } finally {
-      signal.clear()
-      onFinish.resolve()
-      log('findProviders finished: %c', key)
-    }
-  }
-
-  private mapEvent (event: ReframeV1ResponseItem): PeerInfo {
-    const peer = peerIdFromString(event.ID)
-    const ma: Multiaddr[] = []
-
-    for (const strAddr of event.Addrs) {
-      const addr = multiaddr(strAddr)
-      ma.push(addr)
-    }
-
-    const pi = {
-      id: peer,
-      multiaddrs: ma,
-      protocols: []
-    }
-
-    return pi
   }
 
   async provide (): Promise<void> {
     // noop
   }
 
-  async put (): Promise<void> {
-    // noop
+  async put (key: Uint8Array, value: Uint8Array, options?: AbortOptions): Promise<void> {
+    if (!isIPNSKey(key)) {
+      return
+    }
+
+    const peerId = peerIdFromRoutingKey(key)
+    const record = unmarshal(value)
+
+    await this.client.putIPNS(peerId, record, options)
   }
 
-  async get (): Promise<Uint8Array> {
-    throw new CodeError('Not found', 'ERR_NOT_FOUND')
+  async get (key: Uint8Array, options?: AbortOptions): Promise<Uint8Array> {
+    if (!isIPNSKey(key)) {
+      throw new CodeError('Not found', 'ERR_NOT_FOUND')
+    }
+
+    const peerId = peerIdFromRoutingKey(key)
+    const record = await this.client.getIPNS(peerId, options)
+
+    return marshal(record)
   }
 }
 
-export function reframeContentRouting (url: string | URL, init: ReframeContentRoutingInit = {}): () => ContentRouting {
-  return () => new ReframeContentRouting(url, init)
+export function delgatedRoutingV1HTTPAPIContentRouting (url: string | URL, init: DelegatedRoutingV1HTTPAPIContentRoutingInit = {}): () => ContentRouting {
+  return () => new DelegatedRoutingV1HTTPAPIContentRouting(url, init)
 }

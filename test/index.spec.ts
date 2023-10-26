@@ -4,7 +4,7 @@ import { createEd25519PeerId } from '@libp2p/peer-id-factory'
 import { expect } from 'aegir/chai'
 import all from 'it-all'
 import { CID } from 'multiformats/cid'
-import { type ReframeV1ResponseItem, reframeContentRouting } from '../src/index.js'
+import { delgatedRoutingV1HTTPAPIContentRouting } from '../src/index.js'
 
 if (process.env.ECHO_SERVER == null) {
   throw new Error('Echo server not configured correctly')
@@ -15,9 +15,9 @@ const cid = CID.parse('QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn')
 
 describe('ReframeContentRouting', function () {
   it('should find providers', async () => {
-    const providers: ReframeV1ResponseItem[] = [{
-      Protocol: 'transport-bitswap',
-      Schema: 'bitswap',
+    const providers = [{
+      Protocols: ['transport-bitswap'],
+      Schema: 'peer',
       ID: (await createEd25519PeerId()).toString(),
       Addrs: ['/ip4/41.41.41.41/tcp/1234']
     }, {
@@ -25,17 +25,19 @@ describe('ReframeContentRouting', function () {
       Schema: 'bitswap',
       ID: (await createEd25519PeerId()).toString(),
       Addrs: ['/ip4/42.42.42.42/tcp/1234']
+    }, {
+      Schema: 'unknown',
+      ID: (await createEd25519PeerId()).toString(),
+      Addrs: ['/ip4/42.42.42.42/tcp/1234']
     }]
 
     // load providers for the router to fetch
     await fetch(`${process.env.ECHO_SERVER}/add-providers/${cid.toString()}`, {
       method: 'POST',
-      body: JSON.stringify({
-        Providers: providers
-      })
+      body: providers.map(prov => JSON.stringify(prov)).join('\n')
     })
 
-    const routing = reframeContentRouting(serverUrl)()
+    const routing = delgatedRoutingV1HTTPAPIContentRouting(serverUrl)()
 
     const provs = await all(routing.findProviders(cid))
     expect(provs.map(prov => ({
@@ -54,7 +56,7 @@ describe('ReframeContentRouting', function () {
       body: 'not json'
     })
 
-    const routing = reframeContentRouting(serverUrl)()
+    const routing = delgatedRoutingV1HTTPAPIContentRouting(serverUrl)()
 
     const provs = await all(routing.findProviders(cid))
     expect(provs).to.be.empty()
@@ -84,14 +86,14 @@ describe('ReframeContentRouting', function () {
       })
     })
 
-    const routing = reframeContentRouting(serverUrl)()
+    const routing = delgatedRoutingV1HTTPAPIContentRouting(serverUrl)()
 
     const provs = await all(routing.findProviders(cid))
     expect(provs).to.be.empty()
   })
 
   it('should handle empty input', async () => {
-    const routing = reframeContentRouting(serverUrl)()
+    const routing = delgatedRoutingV1HTTPAPIContentRouting(serverUrl)()
 
     const provs = await all(routing.findProviders(cid))
     expect(provs).to.be.empty()

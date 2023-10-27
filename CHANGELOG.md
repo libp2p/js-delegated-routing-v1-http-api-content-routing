@@ -1,3 +1,19 @@
+## [2.0.0](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/compare/v1.0.2...v2.0.0) (2023-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* the module has been renamed as the spec has been renamed
+
+### Bug Fixes
+
+* use @helia/delegated-routing-v1-http-api-client internally ([#27](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/issues/27)) ([5bd026e](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/commit/5bd026e0f86df8926b90101b9bcebe737dbce8a8))
+
+
+### Trivial Changes
+
+* fix build ([543ebc6](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/commit/543ebc6236dcda0448aa08ac9da1edc7f0e88117))
+
 ## [1.0.2](https://github.com/libp2p/js-http-v1-content-routing/compare/v1.0.1...v1.0.2) (2023-10-06)
 
 

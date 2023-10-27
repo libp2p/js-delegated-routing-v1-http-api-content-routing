@@ -1,3 +1,32 @@
+/**
+ * @packageDocumentation
+ *
+ * This is a [ContentRouting](https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.content_routing.ContentRouting.html)
+ * implementation that makes use of the [@helia/delegated-routing-v1-http-api-client](https://www.npmjs.com/package/@helia/delegated-routing-v1-http-api-client)
+ * to use servers that implement the snappily-titled [Delegated Routing V1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/)
+ * spec to get/put IPNS records and to resolve providers for CIDs.
+ *
+ * @example
+ *
+ * ```js
+ * import { createLibp2p } from 'libp2p'
+ * import { delgatedRoutingV1HTTPAPIContentRouting } from '@libp2p/delegated-routing-http-v1-content-routing'
+ *
+ * const node = await createLibp2p({
+ *   contentRouters: [
+ *     delgatedRoutingV1HTTPAPIContentRouting('https://example.org')
+ *   ]
+ *   //.. other config
+ * })
+ *
+ * await node.start()
+ *
+ * for await (const provider of node.contentRouting.findProviders('cid')) {
+ *   console.log('provider', provider)
+ * }
+ * ```
+ */
+
 import { type DelegatedRoutingV1HttpApiClient, createDelegatedRoutingV1HttpApiClient } from '@helia/delegated-routing-v1-http-api-client'
 import { CodeError } from '@libp2p/interface/errors'
 import { logger } from '@libp2p/logger'

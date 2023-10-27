@@ -1,5 +1,3 @@
-# @libp2p/delegated-routing-v1-http-api-content-routing <!-- omit in toc -->
-
 [![libp2p.io](https://img.shields.io/badge/project-libp2p-yellow.svg?style=flat-square)](http://libp2p.io/)
 [![Discuss](https://img.shields.io/discourse/https/discuss.libp2p.io/posts.svg?style=flat-square)](https://discuss.libp2p.io)
 [![codecov](https://img.shields.io/codecov/c/github/libp2p/js-delegated-routing-v1-http-api-content-routing.svg?style=flat-square)](https://codecov.io/gh/libp2p/js-delegated-routing-v1-http-api-content-routing)
@@ -7,19 +5,32 @@
 
 > Use a Delegated Routing V1 HTTP service to discover content providers
 
+## About
+
 This is a [ContentRouting](https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.content_routing.ContentRouting.html)
 implementation that makes use of the [@helia/delegated-routing-v1-http-api-client](https://www.npmjs.com/package/@helia/delegated-routing-v1-http-api-client)
 to use servers that implement the snappily-titled [Delegated Routing V1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/)
 spec to get/put IPNS records and to resolve providers for CIDs.
 
-## Table of contents <!-- omit in toc -->
+### Example
 
-- - [Install](#install)
-    - [Browser `<script>` tag](#browser-script-tag)
-- [Example](#example)
-  - [API Docs](#api-docs)
-  - [License](#license)
-  - [Contribution](#contribution)
+```js
+import { createLibp2p } from 'libp2p'
+import { delgatedRoutingV1HTTPAPIContentRouting } from '@libp2p/delegated-routing-http-v1-content-routing'
+
+const node = await createLibp2p({
+  contentRouters: [
+    delgatedRoutingV1HTTPAPIContentRouting('https://example.org')
+  ]
+  //.. other config
+})
+
+await node.start()
+
+for await (const provider of node.contentRouting.findProviders('cid')) {
+  console.log('provider', provider)
+}
+```
 
 ## Install
 
@@ -33,25 +44,6 @@ Loading this module through a script tag will make it's exports available as `Li
 
 ```html
 <script src="https://unpkg.com/@libp2p/delegated-routing-v1-http-api-content-routing/dist/index.min.js"></script>
-```
-
-# Example
-
-```js
-import { createLibp2p } from 'libp2p'
-import { delgatedRoutingV1HTTPAPIContentRouting } from '@libp2p/delegated-routing-http-v1-content-routing'
-
-const node = await createLibp2p({
-  contentRouters: [
-    delgatedRoutingV1HTTPAPIContentRouting('https://example.org')
-  ]
-  //.. other config
-})
-await node.start()
-
-for await (const provider of node.contentRouting.findProviders('cid')) {
-  console.log('provider', provider)
-}
 ```
 
 ## API Docs

@@ -9,7 +9,7 @@
 
 This is a [ContentRouting](https://libp2p.github.io/js-libp2p/interfaces/_libp2p_interface.content_routing.ContentRouting.html)
 implementation that makes use of the [@helia/delegated-routing-v1-http-api-client](https://www.npmjs.com/package/@helia/delegated-routing-v1-http-api-client)
-to use servers that implement the snappily-titled [Delegated Routing V1 HTTP API](Delegated Routing V1 HTTP API)
+to use servers that implement the snappily-titled [Delegated Routing V1 HTTP API](https://specs.ipfs.tech/routing/http-routing-v1/)
 spec to get/put IPNS records and to resolve providers for CIDs.
 
 ## Table of contents <!-- omit in toc -->

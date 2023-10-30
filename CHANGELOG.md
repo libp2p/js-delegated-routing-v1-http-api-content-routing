@@ -1,3 +1,16 @@
+## [2.0.1](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/compare/v2.0.0...v2.0.1) (2023-10-30)
+
+
+### Trivial Changes
+
+* Update .github/workflows/stale.yml [skip ci] ([8fbbea0](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/commit/8fbbea03dacfd3ab5e950d14b08ab0ac236da461))
+
+
+### Documentation
+
+* add deprecation notice ([c4aa825](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/commit/c4aa825797d8abfeba38b8d255e24abea40ceb9c))
+* update link ([874b75c](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/commit/874b75c86c43733c70be0789f9b50108b066ff5f))
+
 ## [2.0.0](https://github.com/libp2p/js-delegated-routing-v1-http-api-content-routing/compare/v1.0.2...v2.0.0) (2023-10-27)
 
 
